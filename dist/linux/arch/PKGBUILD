@@ -1,7 +1,7 @@
 # Maintainer: Davide Ghilardi (dghila@d71.dev)
 pkgname=nss-dynhosts-git
 _pkgname=nss-dynhosts
-pkgver=.r0.b999996
+pkgver=0.1.1.r0.919cfa7
 pkgrel=1
 pkgdesc="Lazy port binding"
 url="https://github.com/dghilardi/nss-dynhosts"
@@ -37,5 +37,5 @@ package() {
 	cd "${_pkgname}"
 	mkdir -p "${pkgdir}${_lib_path}"
 	install -Dm 0644 "LICENSE" "${pkgdir}/usr/share/licenses/${_pkgname}/LICENSE"
-	install -Dm 0644 "target/release/libnss_dynhosts.so" "${pkgdir}/lib/libnss_dynhosts.so.2"
+	install -Dm 0644 "target/release/libnss_dynhosts.so" "${pkgdir}/usr/lib/libnss_dynhosts.so.2"
 }
