@@ -2,7 +2,7 @@ use std::collections::HashMap;
 use std::net::{IpAddr, Ipv4Addr};
 use std::path::PathBuf;
 use std::process::Command;
-use anyhow::bail;
+use anyhow::{bail, Context};
 use handlebars::Handlebars;
 use libnss::host::Addresses;
 use serde::Serialize;
@@ -44,7 +44,8 @@ impl CustomResolver for CommandResolverConf {
             if out_str.trim().is_empty() {
                 Ok(None)
             } else {
-                let ip: Ipv4Addr = out_str.parse()?;
+                let ip: Ipv4Addr = out_str.trim().parse()
+                    .with_context(|| format!("Error parsing '{out_str}'"))?;
                 Ok(Some(Addresses::V4(vec![ip])))
             }
         } else {
