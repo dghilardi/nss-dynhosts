@@ -1,15 +1,41 @@
+use std::collections::HashMap;
 use std::net::{IpAddr, Ipv4Addr};
 use std::path::PathBuf;
 use std::process::Command;
 use anyhow::bail;
+use handlebars::Handlebars;
 use libnss::host::Addresses;
+use serde::Serialize;
 use crate::conf::CommandResolverConf;
 use crate::resolver::CustomResolver;
 
+#[derive(Serialize)]
+pub struct TemplateParams {
+    url: UrlParam,
+}
+
+#[derive(Serialize)]
+pub struct UrlParam {
+    full: String,
+    parts: HashMap<usize, String>,
+}
+
 impl CustomResolver for CommandResolverConf {
     fn resolve(&self, name: &str) -> anyhow::Result<Option<Addresses>> {
-        let out = Command::new(&self.command)
-            .args(&self.args)
+        let h = Handlebars::new();
+        let params = TemplateParams {
+            url: UrlParam {
+                full: String::from(name),
+                parts: name.split('.')
+                    .rev()
+                    .enumerate()
+                    .map(|(idx, s)| (idx, String::from(s)))
+                    .collect(),
+            },
+        };
+
+        let out = Command::new(&h.render_template(&self.command, &params)?)
+            .args(&self.args.iter().map(|arg| h.render_template(arg, &params)).collect::<Result<Vec<_>, _>>()?)
             .current_dir(self.working_dir.clone().unwrap_or_else(|| PathBuf::from("/tmp")))
             .output()?;
 

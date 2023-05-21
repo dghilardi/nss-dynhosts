@@ -16,3 +16,4 @@ toml = { version = "0.7.4", features = ["preserve_order"] }
 serde = { version = "1.0.163", features = ["derive"] }
 indexmap = { version = "1.9.3", features = ["serde"] }
 anyhow = "1.0.71"
+handlebars = "4.3.7"
