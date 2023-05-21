@@ -17,7 +17,7 @@ lazy_static! {
 }
 
 pub struct HostsPlumber;
-libnss_host_hooks!(plumber, HostsPlumber);
+libnss_host_hooks!(dynhosts, HostsPlumber);
 
 impl HostHooks for HostsPlumber {
     fn get_all_entries() -> Response<Vec<Host>> {
