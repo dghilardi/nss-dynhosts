@@ -9,6 +9,7 @@ pub struct DynHostsConf {
 }
 
 #[derive(Deserialize)]
+#[serde(tag = "mode")]
 pub enum ResolverConf {
     Command(CommandResolverConf),
 }
